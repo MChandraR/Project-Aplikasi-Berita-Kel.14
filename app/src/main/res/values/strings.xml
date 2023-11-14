@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">uBerita</string>
+    <string name="title_activity_sign_in_menu">SignInMenu</string>
+</resources>
