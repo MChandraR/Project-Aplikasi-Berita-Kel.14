@@ -13,10 +13,16 @@
         android:theme="@style/Theme.UBerita"
         tools:targetApi="31">
         <activity
+            android:name=".SignUpMenu"
+            android:exported="false"
+            android:label="@string/title_activity_sign_up_menu"
+            android:theme="@style/Theme.UBerita" />
+        <activity
             android:name=".SignInMenu"
             android:exported="false"
             android:label="@string/title_activity_sign_in_menu"
-            android:theme="@style/Theme.UBerita" />
+            android:theme="@style/Theme.UBerita"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
