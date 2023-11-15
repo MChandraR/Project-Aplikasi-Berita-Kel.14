@@ -129,6 +129,7 @@ class SignInMenu : ComponentActivity() {
                             modifier = Modifier.fillMaxWidth(),colors =  ButtonDefaults.buttonColors(
                                 colorPalette().yellow),
                             onClick = {
+                                startActivity(Intent(context, MainMenu::class.java))
                                       Toast.makeText(context, "Username : " + email + "\nPassword  : "+ password, Toast.LENGTH_SHORT).show()
                             },
                             shape = RoundedCornerShape(20,20,20,20)
