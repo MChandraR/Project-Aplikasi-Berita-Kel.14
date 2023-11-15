@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun mainMenu(){
-        UBeritaTheme {
+        UBeritaTheme(color = colorPalette().BlueLight){
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = colorPalette().BlueLight
@@ -51,21 +51,31 @@ class MainActivity : ComponentActivity() {
                     }
                     Column(modifier = Modifier.fillMaxWidth().weight(.3f), horizontalAlignment = Alignment.CenterHorizontally){
                         Button(
-                            modifier = Modifier.fillMaxWidth(),colors =  ButtonDefaults.buttonColors(colorPalette().yellow),
+                            modifier = Modifier.fillMaxWidth().padding(all=5.dp),colors =  ButtonDefaults.buttonColors(colorPalette().yellow),
                             onClick = {
                                 context.startActivity(Intent(context,SignInMenu::class.java))
                             }
                         ){
-                            Text(text="Sign in")
+                            Text(text="Sign in", fontSize=16.sp)
                         }
-                        Button(modifier = Modifier.fillMaxWidth(),onClick = {}, colors =  ButtonDefaults.buttonColors(Color.White)){
-                            Text(text="Sign up")
+                        Button(
+                            modifier = Modifier.fillMaxWidth().padding(all=5.dp),
+                            onClick = {
+                                      context.startActivity(Intent(context,SignUpMenu::class.java))
+                            },
+                            colors =  ButtonDefaults.buttonColors(Color.White)){
+                            Text(text="Sign up", fontSize=16.sp)
                         }
                     }
                 }
 
             }
         }
+    }
+
+
+    override fun onBackPressed() {
+        finishAffinity()
     }
 }
 

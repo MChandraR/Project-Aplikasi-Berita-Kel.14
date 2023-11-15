@@ -1,12 +1,12 @@
 package com.mcr.uberita
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -24,9 +25,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +44,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mcr.uberita.ui.theme.UBeritaTheme
@@ -67,7 +67,7 @@ class SignInMenu : ComponentActivity() {
         var password by remember {
             mutableStateOf("")
         }
-        UBeritaTheme {
+        UBeritaTheme(color = colorPalette().darkBlue) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = colorPalette().darkBlue
@@ -137,13 +137,24 @@ class SignInMenu : ComponentActivity() {
                         }
 
                         Text(text = "Don't have an account yet ?", color = Color.White, fontSize = 13.sp)
-                        Text(text = "Sign up", color = Color.Yellow,fontSize = 13.sp)
+                        TextButton(
+                            onClick = {
+                                startActivity(Intent(context, SignUpMenu::class.java))
+                            },
+                            modifier = Modifier.offset(y=-13.dp)
+                        ) {
+                            Text(text = "Sign up", color = Color.Yellow,fontSize = 13.sp)
+                        }
 
                     }
                 }
 
             }
         }
+    }
+
+    override fun onBackPressed() {
+        startActivity(Intent(context,MainActivity::class.java))
     }
 }
 
