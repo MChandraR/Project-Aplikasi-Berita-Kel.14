@@ -134,7 +134,7 @@ class SignInMenu : ComponentActivity() {
                             },
                             shape = RoundedCornerShape(20,20,20,20)
                         ){
-                            Text(text="Login")
+                            Text(text="Login", color = colorPalette().darkBlue)
                         }
 
                         Text(text = "Don't have an account yet ?", color = Color.White, fontSize = 13.sp)

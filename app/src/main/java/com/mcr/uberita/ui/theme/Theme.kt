@@ -34,8 +34,8 @@ fun UBeritaTheme(
     )
 
     val LightColorScheme = lightColorScheme(
-        primary = Purple40,
-        secondary = PurpleGrey40,
+        primary = color,
+        secondary = color,
         tertiary = color
 
         /* Other default colors to override

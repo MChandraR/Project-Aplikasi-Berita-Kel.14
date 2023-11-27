@@ -155,7 +155,7 @@ class SignUpMenu : ComponentActivity() {
                             },
                             shape = RoundedCornerShape(20,20,20,20)
                         ){
-                            Text(text="Create Account")
+                            Text(text="Create Account",color = colorPalette().darkBlue)
                         }
 
                         Text(text = "Already have an account  ?", color = Color.White, fontSize = 13.sp)

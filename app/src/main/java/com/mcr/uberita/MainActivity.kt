@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 Column(modifier = Modifier.padding(horizontal =  50.dp),verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally){
                     Column(modifier = Modifier.fillMaxWidth().weight(.5f),verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally){
-                        Text(text="Let's start \nyour \njourney", textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold, fontSize = 48.sp, lineHeight = 52.sp, fontFamily = FontFamily.SansSerif)
+                        Text(text="Let's start \nyour \njourney",color = colorPalette().darkBlue, textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold, fontSize = 48.sp, lineHeight = 52.sp, fontFamily = FontFamily.SansSerif)
                     }
                     Column(modifier = Modifier.fillMaxWidth().weight(.3f), horizontalAlignment = Alignment.CenterHorizontally){
                         Button(
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                                 context.startActivity(Intent(context,SignInMenu::class.java))
                             }
                         ){
-                            Text(text="Sign in", fontSize=16.sp)
+                            Text(text="Sign in", fontSize=16.sp,color = colorPalette().darkBlue)
                         }
                         Button(
                             modifier = Modifier.fillMaxWidth().padding(all=5.dp),
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                                       context.startActivity(Intent(context,SignUpMenu::class.java))
                             },
                             colors =  ButtonDefaults.buttonColors(Color.White)){
-                            Text(text="Sign up", fontSize=16.sp)
+                            Text(text="Sign up", fontSize=16.sp,color = colorPalette().darkBlue)
                         }
                     }
                 }

@@ -8,12 +8,18 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
@@ -22,10 +28,12 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -38,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mcr.uberita.fragment.homeFragment
@@ -50,12 +59,12 @@ class MainMenu : ComponentActivity() {
     var showBar:MutableState<Boolean> = mutableStateOf(true)
     val items = listOf(menus.Home, menus.Notif,menus.Bookmark, menus.Profile)
     var selectedScreen: MutableState<String> =  mutableStateOf(menus.Home.route)
-    val homes: @Composable () -> Unit = { homeFragment().HomeView() }
+    val homes: @Composable () -> Unit = { homeFragment().HomeView(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            UBeritaTheme(color = Color.White) {
+            UBeritaTheme(color = colorPalette().darkBlue) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -92,7 +101,7 @@ class MainMenu : ComponentActivity() {
         var refresh by remember {
             mutableStateOf(true)
         }
-            NavigationBar(containerColor = colorPalette().blue, modifier = Modifier
+            MyNavigationBar(containerColor = colorPalette().blue, modifier = Modifier
                 .padding(all = 10.dp)
                 .fillMaxWidth()
                 .clip(
@@ -112,7 +121,7 @@ class MainMenu : ComponentActivity() {
                             Icon( tint =  if(selectedScreen.value==replyDestination.route) Color.Yellow else Color.White, imageVector =  replyDestination.icon, contentDescription = replyDestination.route )
                         },
                         label = {
-                            Text(text = replyDestination.title!!)
+                            Text(text = replyDestination.title!!, color = Color.White)
                         }
                     )
 
@@ -123,85 +132,31 @@ class MainMenu : ComponentActivity() {
 }
 
 
-//    @Composable
-//    fun bottomNavBar(){
-//        AnimatedVisibility(
-//            visible = showBar.value,
-//            enter = scaleIn(initialScale = 0f)
-//        ) {
-//            BottomAppBar(
-//                modifier = Modifier
-//                    .height(75.dp)
-//            ) {
-//                BottomNavigation(
-//                    backgroundColor = CP.Invisible,
-//                    modifier = Modifier
-//                        .padding(12.dp, 0.dp, 12.dp, 12.dp)
-//                        .clip(RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp))
-//                        .height(100.dp)
-//                        .background(CP.largeRadialGradient),
-//                    elevation = 0.dp
-//                ) {
-//                    items.forEach {
-//                        var isIcon = false
-//                        BottomNavigationItem(
-//                            icon = {
-//                                it.icon?.let {
-//                                    isIcon = true
-//                                    Icon(
-//                                        imageVector = it,
-//                                        contentDescription = "",
-//                                        modifier = Modifier.size(30.dp),
-//                                        tint = Color.White
-//
-//                                    )
-//                                }
-//                            },
-//                            label = {
-//                                it.title?.let {
-//                                    var text = ""
-//                                    if(isIcon) text = it
-//                                    Text(
-//                                        text = text,
-//                                        color = Color.White,
-//                                        fontSize = 11.sp
-//                                    )
-//                                }
-//                            },
-//                            selected = it.title == selectedScreen.value,
-//                            onClick = {
-//                                if(isIcon)selectedScreen.value = it.route
-//                            }
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
-//}
-//
-//
-//@Composable
-//fun FAB() {
-//    AnimatedVisibility(
-//        visible = showBar.value,
-//        enter = scaleIn(initialScale = 0f)
-//    ) {
-//        FloatingActionButton(
-//            modifier = Modifier.size(60.dp),
-//            onClick = {
-//                selectedScreen.value = "scan"
-//            },
-//            shape = CircleShape,
-//            contentColor = Color.White,
-//            containerColor = CP.LightBlue
-//        ) {
-//            Icon(
-//                painter = painterResource(id = R.drawable.baseline_qr_code_scanner_24),
-//                contentDescription = "float_icon"
-//            )
-//
-//        }
-//    }
-//}
+
+
+@Composable
+fun MyNavigationBar(
+    modifier: Modifier = Modifier,
+    containerColor: Color = NavigationBarDefaults.containerColor,
+    contentColor: Color = MaterialTheme.colorScheme.contentColorFor(containerColor),
+    tonalElevation: Dp = NavigationBarDefaults.Elevation,
+    windowInsets: WindowInsets = NavigationBarDefaults.windowInsets,
+    content: @Composable RowScope.() -> Unit
+) {
+    Surface(
+        color = containerColor,
+        contentColor = contentColor,
+        tonalElevation = tonalElevation,
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(windowInsets)
+                .height(70.dp)
+                .selectableGroup(),
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            content = content
+        )
+    }
+}
