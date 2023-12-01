@@ -40,9 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mcr.uberita.ui.theme.UBeritaTheme
 import com.mcr.uberita.util.colorPalette
+import com.mcr.uberita.util.myCustomUI
 
 class SignUpMenu : ComponentActivity() {
     val context: Context = this
+    val myCustomUI: myCustomUI = myCustomUI()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -78,7 +80,7 @@ class SignUpMenu : ComponentActivity() {
                         .fillMaxWidth()
                         .weight(.6f), horizontalAlignment = Alignment.CenterHorizontally){
                         Text(text="Email", textAlign = TextAlign.Left, color = Color.White, modifier = Modifier.fillMaxWidth())
-                        myTextField(value = email ,
+                        myCustomUI.myTextField(value = email ,
                             onValueChange = {email = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
@@ -96,11 +98,11 @@ class SignUpMenu : ComponentActivity() {
                                 Icon(painter = painterResource(id = R.drawable.baseline_email_24), contentDescription = "Password")
                             },
                             placeholder = {
-                                placeHolder("Masukkan email")
+                                myCustomUI.placeHolder("Masukkan email")
                             })
 
                         Text(text="Username", textAlign = TextAlign.Left, color = Color.White, modifier = Modifier.fillMaxWidth())
-                        myTextField(value = username ,
+                        myCustomUI.myTextField(value = username ,
                             onValueChange = {username = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
@@ -118,12 +120,12 @@ class SignUpMenu : ComponentActivity() {
                                 Icon(painter = painterResource(id = R.drawable.baseline_person_outline_24), contentDescription = "Password")
                             },
                             placeholder = {
-                                placeHolder("Masukkan username")
+                                myCustomUI.placeHolder("Masukkan username")
                             })
 
 
                         Text(text="Password", textAlign = TextAlign.Left, color = Color.White,modifier = Modifier.fillMaxWidth())
-                        myTextField(value = password ,
+                        myCustomUI.myTextField(value = password ,
                             onValueChange = {password = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
@@ -141,7 +143,7 @@ class SignUpMenu : ComponentActivity() {
                                 Icon(painter = painterResource(id = R.drawable.baseline_vpn_key_24), contentDescription = "Password")
                             },
                             placeholder = {
-                                placeHolder("Masukkan password")
+                                myCustomUI.placeHolder("Masukkan password")
                             })
 
 

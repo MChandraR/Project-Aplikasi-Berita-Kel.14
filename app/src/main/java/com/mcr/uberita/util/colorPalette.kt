@@ -9,4 +9,8 @@ class colorPalette {
     val gray = Color(0xFF757575)
     val yellow = Color(0xFFFFEB3B)
     val invisible = Color(0xFFEB3B)
+    val lightGray =  Color(0xFFE7E6E6)
+    val dark25 =  Color(0x40000000)
+    val dark10 =  Color(0x1A686666)
+    val dark5 =  Color(0xD858585)
 }

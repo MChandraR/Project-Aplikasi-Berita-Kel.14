@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-
+import com.mcr.uberita.util.colorPalette
 
 
 @Composable
@@ -29,14 +29,20 @@ fun UBeritaTheme(
 ) {
     val DarkColorScheme = darkColorScheme(
         primary = color,
-        secondary = color,
-        tertiary = color
+        secondary = colorPalette().darkBlue,
+        tertiary = Color.White,
+        outline = Color.White,
+        background = Color.Black,
+        inverseSurface = Color.Black
     )
 
     val LightColorScheme = lightColorScheme(
         primary = color,
-        secondary = color,
-        tertiary = color
+        secondary = colorPalette().dark10,
+        tertiary = color,
+        outline = colorPalette().darkBlue,
+        background = Color.White,
+        inverseSurface = Color.White
 
         /* Other default colors to override
         background = Color(0xFFFFFBFE),

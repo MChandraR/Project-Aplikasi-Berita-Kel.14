@@ -1,6 +1,7 @@
 package com.mcr.uberita.fragment
 
 import android.content.Context
+import android.os.Looper
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,27 +15,35 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
@@ -45,21 +54,47 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.mcr.uberita.R
 import com.mcr.uberita.util.colorPalette
+import com.mcr.uberita.util.myCustomUI
 import java.security.AccessController.getContext
+import java.util.logging.Handler
+import kotlin.math.abs
 
 
 class homeFragment {
     val category = listOf<String>("Sport","Health","Tech","Local")
+    val myCustomUI:myCustomUI = myCustomUI()
     var selectedCategory:MutableState<String> = mutableStateOf(category.get(0))
     var columnSize = mutableStateOf(IntSize.Zero)
+    val dataBerita = listOf<String>("Berita pertama", "Berita kedua", "Berita ketiga", "Berita keempat","Berita kelima", "Berita keenam", "Berita ketujuh","Berita kedelapan")
     var context:Context? = null
+    var scrollStat:MutableState<LazyListState> = mutableStateOf( LazyListState() )
+    var isScrolling:MutableState<Boolean> = mutableStateOf(false)
+    var scrollTemp = scrollStat
+
+//    val runnable:Runnable = Runnable {
+//        Toast.makeText(context, scrollStat.toString(), Toast.LENGTH_SHORT).show()
+//        isScrolling.value = scrollStat.isScrollInProgress
+//        startChek()
+//    }
+
+    fun startChek(){
+//        android.os.Handler(Looper.getMainLooper()).postDelayed(
+//            runnable
+//            ,1000)
+    }
+
+    fun homeFragment(){
+        startChek()
+    }
+
     @Composable
     fun HomeView(context: Context){
         this.context = context
         val scale =  context.resources.displayMetrics.density
+
         Column(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier
-                .weight(.1f)
+                .weight(.075f)
                 .background(colorPalette().blue), verticalArrangement = Arrangement.Center) {
                 Row(modifier = Modifier
                     .fillMaxWidth(),horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
@@ -77,7 +112,8 @@ class homeFragment {
                 }
             }
             Column(modifier = Modifier
-                .weight(.9f)
+                .weight(.925f)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(all = 10.dp)
                 .onGloballyPositioned {
                     columnSize.value = it.size
@@ -101,14 +137,31 @@ class homeFragment {
 
                 Row(
                     Modifier
-                        .padding(vertical = 10.dp)
+                        .padding(top = 10.dp)
                         .horizontalScroll(rememberScrollState())) {
                     category.forEach {
                         Banner(columnSize.value)
                     }
                 }
-
-                
+                Text(modifier = Modifier.padding(bottom=5.dp),text = "For You",fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, fontFamily = FontFamily.SansSerif, color = MaterialTheme.colorScheme.primary)
+                LazyColumn(
+                    state = scrollStat.value,
+                    userScrollEnabled = true,
+                    content = {
+                        items(
+                            count = dataBerita.size,
+                            key = {
+                                dataBerita[it]
+                            },
+                            itemContent = {
+                                myCustomUI.beritaListView(judul = dataBerita[it])
+                            }
+                        )
+                        item { 
+                            Box(modifier = Modifier.height(80.dp))
+                        }
+                    }
+                )
 
             }
         }
@@ -119,11 +172,13 @@ class homeFragment {
     @Composable
     fun Banner(width: IntSize){
         val density = this.context!!.resources.displayMetrics.density
-        Box(modifier = Modifier.width((width.width/density - 0.5f).dp))  {
-            ConstraintLayout(modifier = Modifier.width((width.width/density - 0.5f).dp).padding(all=5.dp)) {
+        Box{
+            ConstraintLayout(modifier = Modifier
+                .width((width.width / density - 0.5f).dp)
+                .padding(horizontal = 5.dp)) {
                 val (bg,content) = createRefs()
                 Image(
-                    painterResource(R.drawable.example),
+                    painterResource(R.drawable.berita_banner),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -139,9 +194,9 @@ class homeFragment {
                                 Color.Transparent
                             )
                             drawContent()
-                            drawRect(
+                            drawRoundRect(
                                 blendMode = BlendMode.DstOut,
-                                brush = Brush.verticalGradient(colors),
+                                brush = Brush.verticalGradient(colors = colors),
                             )
                         }
                 )
@@ -155,12 +210,17 @@ class homeFragment {
                             end.linkTo(parent.end)
                         }
                 ) {
-                    Text(text = "Judul Berita", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text(maxLines = 2, text = "Judul Berita", color = MaterialTheme.colorScheme.outline, fontWeight = FontWeight.Bold)
                     Text(
+                        style = TextStyle(shadow = Shadow(MaterialTheme.colorScheme.inverseSurface, blurRadius = .5f)),
+                        maxLines = 4,
                         modifier = Modifier
+                            .padding(top = 5.dp, end = 5.dp)
                             .height(100.dp),
                         fontSize = 13.sp,
-                        text = "Deskripsi berita , field ini berisi kontent atau deskripsi singkat dari berita yang aka ditamplkan" , color = Color.Black)
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 14.sp,
+                        text = "Deskripsi berita , field ini berisi kontent atau deskripsi singkat dari berita yang aka ditamplkan" , color = MaterialTheme.colorScheme.outline,)
                 }
 
             }

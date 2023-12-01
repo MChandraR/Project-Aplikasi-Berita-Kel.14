@@ -2,11 +2,16 @@ package com.mcr.uberita
 
 import android.content.Context
 import android.os.Bundle
+import android.view.WindowInsetsController
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -35,6 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,12 +50,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowInsetsControllerCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mcr.uberita.fragment.homeFragment
+import com.mcr.uberita.fragment.profileFragment
 import com.mcr.uberita.ui.theme.UBeritaTheme
 import com.mcr.uberita.util.colorPalette
 import com.mcr.uberita.util.menus
@@ -58,10 +68,14 @@ class MainMenu : ComponentActivity() {
     val context:Context = this
     var showBar:MutableState<Boolean> = mutableStateOf(true)
     val items = listOf(menus.Home, menus.Notif,menus.Bookmark, menus.Profile)
+    val homeFragments:homeFragment = homeFragment()
+    val profileFragments:profileFragment = profileFragment()
     var selectedScreen: MutableState<String> =  mutableStateOf(menus.Home.route)
-    val homes: @Composable () -> Unit = { homeFragment().HomeView(this) }
+    val homes: @Composable () -> Unit = { homeFragments.HomeView(this) }
+    val profiles:@Composable () -> Unit = {profileFragments.profileView()}
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        homeFragments.startChek()
         super.onCreate(savedInstanceState)
         setContent {
             UBeritaTheme(color = colorPalette().darkBlue) {
@@ -79,16 +93,23 @@ class MainMenu : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainMenuView(){
+
         Scaffold(
             bottomBar = {
                 BotNavBar(context =this )
             },
             modifier = Modifier.background(Color.White)
         ) {
+
             val pad = it
             when(selectedScreen.value) {
                 "home" -> {
                     homes()
+                    profileFragments.toggleProfile(0, false)
+                }
+                "profile" -> {
+                    profiles()
+                    profileFragments.toggleProfile(200, true)
                 }
             }
         }
@@ -101,6 +122,11 @@ class MainMenu : ComponentActivity() {
         var refresh by remember {
             mutableStateOf(true)
         }
+        AnimatedVisibility(
+            visible = !homeFragments.scrollStat.value.isScrollInProgress,
+            enter = slideInVertically(initialOffsetY = {100}),
+            exit = slideOutVertically(targetOffsetY = {100})
+        ) {
             MyNavigationBar(containerColor = colorPalette().blue, modifier = Modifier
                 .padding(all = 10.dp)
                 .fillMaxWidth()
@@ -127,6 +153,8 @@ class MainMenu : ComponentActivity() {
 
                 }
             }
+        }
+
 
     }
 }

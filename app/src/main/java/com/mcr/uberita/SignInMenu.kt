@@ -48,9 +48,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mcr.uberita.ui.theme.UBeritaTheme
 import com.mcr.uberita.util.colorPalette
+import com.mcr.uberita.util.myCustomUI
 
 class SignInMenu : ComponentActivity() {
     val context: Context = this
+    val myCustomUI:myCustomUI = myCustomUI()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -82,7 +84,7 @@ class SignInMenu : ComponentActivity() {
                         .fillMaxWidth()
                         .weight(.5f), horizontalAlignment = Alignment.CenterHorizontally){
                         Text(text="Email", textAlign = TextAlign.Left, color = Color.White, modifier = Modifier.fillMaxWidth())
-                        myTextField(value = email ,
+                        myCustomUI.myTextField(value = email ,
                             onValueChange = {email = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
@@ -100,12 +102,12 @@ class SignInMenu : ComponentActivity() {
                                 Icon(painter = painterResource(id = R.drawable.baseline_person_outline_24), contentDescription = "Password")
                             },
                             placeholder = {
-                                placeHolder("Masukkan email")
+                                myCustomUI.placeHolder("Masukkan email")
                             })
 
 
                         Text(text="Password", textAlign = TextAlign.Left, color = Color.White,modifier = Modifier.fillMaxWidth())
-                        myTextField(value = password ,
+                        myCustomUI.myTextField(value = password ,
                             onValueChange = {password = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
@@ -123,7 +125,7 @@ class SignInMenu : ComponentActivity() {
                                 Icon(painter = painterResource(id = R.drawable.baseline_vpn_key_24), contentDescription = "Password")
                             },
                             placeholder = {
-                                placeHolder("Masukkan password")
+                                myCustomUI.placeHolder("Masukkan password")
                             })
                         Button(
                             modifier = Modifier.fillMaxWidth(),colors =  ButtonDefaults.buttonColors(
@@ -160,63 +162,3 @@ class SignInMenu : ComponentActivity() {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun myTextField(
-    leadingIcon:  @Composable (() -> Unit)? = null,
-    trailingIcon:  @Composable (() -> Unit)? = null,
-    supportingText: @Composable (() -> Unit)? = null,
-    label: @Composable (() -> Unit)? = null,
-    placeholder: @Composable (() -> Unit)? = null,
-    value:String = "",
-    modifier:Modifier,
-    onValueChange: (String) -> Unit,
-    colors:androidx.compose.material3.TextFieldColors = TextFieldDefaults.textFieldColors(colorPalette().invisible),
-    shape: Shape = TextFieldDefaults.filledShape
-){
-    val mergedTextStyle = LocalTextStyle.current.merge(androidx.compose.ui.text.TextStyle(color = Color.Black))
-    BasicTextField(
-        value = value,
-        modifier = modifier
-            .defaultMinSize(
-                minHeight = 16.dp
-            ).background(colorPalette().invisible)
-            .fillMaxWidth()
-            .padding(all = 0.dp),
-        onValueChange = onValueChange,
-        enabled = true,
-        readOnly = false,
-        cursorBrush = SolidColor(colorPalette().BlueLight),
-        visualTransformation = VisualTransformation.None,
-        keyboardOptions = KeyboardOptions.Default,
-        keyboardActions = KeyboardActions.Default,
-        interactionSource = remember { MutableInteractionSource() },
-        singleLine = true,
-        maxLines = 1,
-        decorationBox = {
-            TextFieldDefaults.TextFieldDecorationBox(
-                contentPadding = PaddingValues(0.dp) ,
-                value = value,
-                visualTransformation = VisualTransformation.None,
-                innerTextField = it,
-                placeholder = placeholder,
-                label = label,
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                supportingText = supportingText,
-                shape = RoundedCornerShape(50,50,50,50),
-                singleLine = true,
-                enabled = true,
-                isError = false,
-                interactionSource = remember { MutableInteractionSource() },
-                colors = colors
-            )
-        }
-
-    )
-}
-
-@Composable
-fun placeHolder(text:String=""){
-    Text(text = text, color = colorPalette().gray, fontSize = 14.sp)
-}
