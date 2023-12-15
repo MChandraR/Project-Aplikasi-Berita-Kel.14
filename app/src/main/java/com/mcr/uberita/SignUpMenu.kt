@@ -18,12 +18,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,16 +35,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mcr.uberita.interfaces.userAPI
+import com.mcr.uberita.model.loginModel
 import com.mcr.uberita.ui.theme.UBeritaTheme
-import com.mcr.uberita.util.colorPalette
+import com.mcr.uberita.util.clientAPI
+import com.mcr.uberita.util.colorPalettes
 import com.mcr.uberita.util.myCustomUI
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class SignUpMenu : ComponentActivity() {
     val context: Context = this
-    val myCustomUI: myCustomUI = myCustomUI()
+    var btnEnabled:MutableState<Boolean> = mutableStateOf(true)
+    val myCustomUI: myCustomUI = myCustomUI(context)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -52,14 +58,44 @@ class SignUpMenu : ComponentActivity() {
         }
     }
 
+    fun signUp(username:String, password:String, email:String){
+        val clientAPI: Retrofit = clientAPI().getClientAPI()
+        var userAPI: userAPI = clientAPI.create(userAPI::class.java)
+        var userData:loginModel.loginData = loginModel.loginData()
+        userData.username = username
+        userData.password = password
+        userData.email = email
+        var request  = userAPI.signUp(userData)
+
+        request.enqueue(object:retrofit2.Callback<loginModel>{
+            override fun onResponse(call: Call<loginModel>, response: Response<loginModel>) {
+                var resData = response.body()!!
+                if(resData.status=="sukses"){
+                    Toast.makeText(context,"SignUp berhasil userID : "+resData.data.user_id,Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(context, SignInMenu::class.java))
+                }else{
+                    Toast.makeText(context,resData.message,Toast.LENGTH_SHORT).show()
+                }
+                btnEnabled.value = true
+            }
+
+            override fun onFailure(call: Call<loginModel>, t: Throwable) {
+                btnEnabled.value = true
+            }
+
+        })
+
+
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun SignUpView(){
-        UBeritaTheme(colorPalette().blue) {
+        UBeritaTheme(colorPalettes().blue) {
             // A surface container using the 'background' color from the theme
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = colorPalette().blue
+                color = colorPalettes().blue
             ) {
                 var email by remember {
                     mutableStateOf("")
@@ -84,16 +120,16 @@ class SignUpMenu : ComponentActivity() {
                             onValueChange = {email = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
-                                disabledTextColor = colorPalette().invisible,
-                                focusedIndicatorColor =colorPalette().BlueLight,
-                                unfocusedIndicatorColor = colorPalette().invisible,
-                                disabledIndicatorColor = colorPalette().invisible,
+                                disabledTextColor = colorPalettes().invisibles,
+                                focusedIndicatorColor =colorPalettes().BlueLight,
+                                unfocusedIndicatorColor = colorPalettes().invisibles,
+                                disabledIndicatorColor = colorPalettes().invisibles,
                                 containerColor = Color.White
                             ),
                             shape = RoundedCornerShape(50, 50, 50, 50),
                             modifier  = Modifier
                                 .padding(bottom = 10.dp)
-                                .background(colorPalette().invisible),
+                                .background(colorPalettes().invisibles),
                             leadingIcon = {
                                 Icon(painter = painterResource(id = R.drawable.baseline_email_24), contentDescription = "Password")
                             },
@@ -106,16 +142,16 @@ class SignUpMenu : ComponentActivity() {
                             onValueChange = {username = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
-                                disabledTextColor = colorPalette().invisible,
-                                focusedIndicatorColor =colorPalette().BlueLight,
-                                unfocusedIndicatorColor = colorPalette().invisible,
-                                disabledIndicatorColor = colorPalette().invisible,
+                                disabledTextColor = colorPalettes().invisibles,
+                                focusedIndicatorColor =colorPalettes().BlueLight,
+                                unfocusedIndicatorColor = colorPalettes().invisibles,
+                                disabledIndicatorColor = colorPalettes().invisibles,
                                 containerColor = Color.White
                             ),
                             shape = RoundedCornerShape(50, 50, 50, 50),
                             modifier  = Modifier
                                 .padding(bottom = 10.dp)
-                                .background(colorPalette().invisible),
+                                .background(colorPalettes().invisibles),
                             leadingIcon = {
                                 Icon(painter = painterResource(id = R.drawable.baseline_person_outline_24), contentDescription = "Password")
                             },
@@ -129,16 +165,16 @@ class SignUpMenu : ComponentActivity() {
                             onValueChange = {password = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 textColor = Color.Black,
-                                disabledTextColor = colorPalette().invisible,
-                                focusedIndicatorColor =colorPalette().BlueLight,
-                                unfocusedIndicatorColor = colorPalette().invisible,
-                                disabledIndicatorColor = colorPalette().invisible,
+                                disabledTextColor = colorPalettes().invisibles,
+                                focusedIndicatorColor =colorPalettes().BlueLight,
+                                unfocusedIndicatorColor = colorPalettes().invisibles,
+                                disabledIndicatorColor = colorPalettes().invisibles,
                                 containerColor = Color.White
                             ),
                             shape = RoundedCornerShape(25, 25, 25, 25),
                             modifier  = Modifier
                                 .padding(bottom = 30.dp)
-                                .background(colorPalette().invisible),
+                                .background(colorPalettes().invisibles),
                             leadingIcon = {
                                 Icon(painter = painterResource(id = R.drawable.baseline_vpn_key_24), contentDescription = "Password")
                             },
@@ -148,16 +184,23 @@ class SignUpMenu : ComponentActivity() {
 
 
                         Button(
+                            enabled = btnEnabled.value,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 20.dp),colors =  ButtonDefaults.buttonColors(
-                                colorPalette().yellow),
+                                colorPalettes().yellow),
                             onClick = {
-                                Toast.makeText(context, "Username : " + email + "\nPassword  : "+ password, Toast.LENGTH_SHORT).show()
+                                if(username.isEmpty() || password.isEmpty() || email.isEmpty()){
+                                    Toast.makeText(context,"Harap isi data dengan benar !", Toast.LENGTH_SHORT).show()
+                                }else{
+                                    btnEnabled.value = false
+                                    signUp(username, password,email)
+                                }
+
                             },
                             shape = RoundedCornerShape(20,20,20,20)
                         ){
-                            Text(text="Create Account",color = colorPalette().darkBlue)
+                            Text(text="Create Account",color = colorPalettes().darkBlues)
                         }
 
                         Text(text = "Already have an account  ?", color = Color.White, fontSize = 13.sp)

@@ -67,6 +67,14 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.33.2-alpha")
 
     testImplementation("junit:junit:4.13.2")
+
+    //Glide untuk image
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+
+    //API dan JSON Converter
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
